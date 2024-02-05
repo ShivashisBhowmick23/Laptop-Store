@@ -19,7 +19,7 @@ public class LaptopServiceImpl implements LaptopService {
 
     @Override
     public void addLaptop(Laptop laptop) {
-         laptopRepository.saveAndFlush(laptop);
+        laptopRepository.saveAndFlush(laptop);
     }
 
     @Override

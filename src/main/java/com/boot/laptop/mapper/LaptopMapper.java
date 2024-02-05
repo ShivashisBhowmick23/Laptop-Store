@@ -3,7 +3,6 @@ package com.boot.laptop.mapper;
 import com.boot.laptop.model.Laptop;
 import com.boot.laptop.request.LaptopRequest;
 import com.boot.laptop.response.LaptopResponse;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Component;
 
 @Component
