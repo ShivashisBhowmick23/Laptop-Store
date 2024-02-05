@@ -1,5 +1,6 @@
 package com.boot.laptop.controller;
 
+import com.boot.laptop.constant.URLConstant;
 import com.boot.laptop.mapper.LaptopMapper;
 import com.boot.laptop.model.Laptop;
 import com.boot.laptop.request.LaptopRequest;
@@ -13,14 +14,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/laptop-store")
+@RequestMapping(URLConstant.LAPTOP_STORE)
 public class LaptopController {
     @Autowired
     private LaptopService laptopService;
     @Autowired
     private LaptopMapper laptopMapper;
 
-    @PostMapping("/add-laptop")
+    @PostMapping(URLConstant.ADD_LAPTOP_INTO_STORE)
     public ResponseEntity<LaptopResponse> addLaptop(@RequestBody LaptopRequest laptopRequest) {
         Laptop request = laptopMapper.mapLaptopRequestToLaptop(laptopRequest);
         laptopService.addLaptop(request);
