@@ -22,14 +22,26 @@ repositories {
 }
 
 dependencies {
+    //Actuator Dependency
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    //Spring Data JPA Dependency
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    //JPA Validation Dependency
     implementation 'org.springframework.boot:spring-boot-starter-validation'
+    //Starter Web Dependency
     implementation 'org.springframework.boot:spring-boot-starter-web'
+    //Lombok Dependency
     compileOnly 'org.projectlombok:lombok'
+    //Postgresql Dependency
     runtimeOnly 'org.postgresql:postgresql'
+    //Lombok Annotation Dependency
     annotationProcessor 'org.projectlombok:lombok'
+    //Spring Starter Test Dependency
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    //Swagger OPEN API Dependency
+    implementation group: 'org.springdoc', name: 'springdoc-openapi-starter-webmvc-ui', version: '2.3.0'
+
+
 }
 
 tasks.named('test') {
