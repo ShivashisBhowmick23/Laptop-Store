@@ -10,6 +10,8 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -36,7 +38,7 @@ public class LaptopController {
         laptopService.addLaptop(request);
         //now we are taking laptop type request and using the mapper class we are converting the request into response
         LaptopResponse response = laptopMapper.mapLaptopToLaptopResponse(request);
-        return ResponseEntity.ok(response);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
 
     }
 
@@ -46,7 +48,7 @@ public class LaptopController {
     public ResponseEntity<List<LaptopResponse>> getAllLaptop() {
         List<Laptop> laptopList = laptopService.getAllLaptop();
         List<LaptopResponse> responseList = laptopMapper.mapLaptopListToLaptopResponseList(laptopList);
-        return ResponseEntity.ok(responseList);
+        return ResponseEntity.status(HttpStatus.OK).body(responseList);
     }
 
     @GetMapping(URLConstant.LAPTOP_BY_LAPTOP_ID)
@@ -55,7 +57,7 @@ public class LaptopController {
     public ResponseEntity<LaptopResponse> getLaptopById(@PathVariable("laptop_id") int laptop_id) {
         laptopService.getLaptopById(laptop_id);
         LaptopResponse response = laptopMapper.mapLaptopToLaptopResponseByLaptopID(laptop_id);
-        return ResponseEntity.ok(response);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
 }
