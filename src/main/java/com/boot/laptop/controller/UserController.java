@@ -9,6 +9,8 @@ import com.boot.laptop.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +22,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(URLConstant.USER)
 public class UserController {
 
+    private static final Logger log = LoggerFactory.getLogger(UserController.class);
+
     private final UserService userService;
     private final UserMapper userMapper;
 
@@ -28,14 +32,23 @@ public class UserController {
         this.userService = userService;
         this.userMapper = userMapper;
     }
-
     @PostMapping(URLConstant.ADD_USER)
-    @Operation(summary = "Add user into the database", description = " addUser method will add into the database and return inserted User", method = "POST")
-    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Successful operation"), @ApiResponse(responseCode = "404", description = "Resource not found"), @ApiResponse(responseCode = "500", description = "Internal Server Error")})
+    @Operation(summary = "Add user into the database",
+            description = " addUser method will add into the database and return inserted User",
+            method = "POST")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successful operation"),
+            @ApiResponse(responseCode = "404", description = "Resource not found"),
+            @ApiResponse(responseCode = "500", description = "Internal Server Error")
+    })
     public ResponseEntity<UserResponse> addUser(UserRequest userRequest) {
+        log.debug("Mapping user request to user");
         User request = userMapper.mapUserRequestToUser(userRequest);
+        log.debug("Adding user to the database");
         userService.addUser(request);
+        log.debug("Mapping user to user response");
         UserResponse response = userMapper.mapUserToUserResponse(request);
+        log.debug("Returning response with status OK");
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 }
