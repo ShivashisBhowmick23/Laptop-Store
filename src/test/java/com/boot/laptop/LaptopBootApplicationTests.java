@@ -10,4 +10,14 @@ class LaptopBootApplicationTests {
     void contextLoads() {
     }
 
+    @Test
+    void testContextLoadsSuccess() {
+        // Testing if the context loads successfully
+    }
+
+    @Test
+    void testContextLoadsFailure() {
+        // Testing if the context fails to load
+    }
+
 }
