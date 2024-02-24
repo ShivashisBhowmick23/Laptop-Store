@@ -13,7 +13,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -37,6 +36,7 @@ public class LaptopController {
 
     /**
      * Add Laptop into the database
+     *
      * @param laptopRequest the request body containing the details of the laptop to be added
      * @return the response entity containing the inserted laptop
      */
@@ -83,7 +83,7 @@ public class LaptopController {
         long laptopCount = 0;
         LOGGER.debug("Fetching all laptops from the database");
         List<Laptop> laptopList = laptopService.getAllLaptop();
-        laptopCount=  laptopList.stream().count();
+        laptopCount = laptopList.stream().count();
         LOGGER.debug("Mapping laptop list to response list");
         List<LaptopResponse> responseList = laptopMapper.mapLaptopListToLaptopResponseList(laptopList);
         LOGGER.debug("Returning laptop response list");

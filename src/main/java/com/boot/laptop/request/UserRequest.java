@@ -1,8 +1,12 @@
 package com.boot.laptop.request;
 
-import lombok.Data;
+import lombok.*;
 
 @Data
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class UserRequest {
     private int user_id;
     private String user_name;

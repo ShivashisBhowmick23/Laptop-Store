@@ -1,8 +1,12 @@
 package com.boot.laptop.response;
 
-import lombok.Data;
+import lombok.*;
 
 @Data
+@Getter
+@AllArgsConstructor
+@NoArgsConstructor
+@Setter
 public class UserResponse {
     private int user_id;
     private String user_name;

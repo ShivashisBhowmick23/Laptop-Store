@@ -4,7 +4,6 @@ import com.boot.laptop.model.Laptop;
 import com.boot.laptop.model.User;
 import com.boot.laptop.repository.LaptopRepository;
 import com.boot.laptop.request.UserRequest;
-import com.boot.laptop.response.LaptopResponse;
 import com.boot.laptop.response.UserResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,8 +22,8 @@ public class UserMapper {
     /**
      * Map the user request to a user, including laptop details if available.
      *
-     * @param  userRequest  the user request object to be mapped
-     * @return              the user object mapped from the user request
+     * @param userRequest the user request object to be mapped
+     * @return the user object mapped from the user request
      */
     public User mapUserRequestToUser(UserRequest userRequest) {
         User user = new User();
@@ -51,8 +50,8 @@ public class UserMapper {
     /**
      * Maps a User object to a UserResponse object.
      *
-     * @param  user  the User object to be mapped
-     * @return       the mapped UserResponse object
+     * @param user the User object to be mapped
+     * @return the mapped UserResponse object
      */
     public UserResponse mapUserToUserResponse(User user) {
         UserResponse userResponse = new UserResponse();

@@ -32,6 +32,7 @@ public class UserController {
         this.userService = userService;
         this.userMapper = userMapper;
     }
+
     @PostMapping(URLConstant.ADD_USER)
     @Operation(summary = "Add user into the database",
             description = " addUser method will add into the database and return inserted User",

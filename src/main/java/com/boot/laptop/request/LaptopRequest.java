@@ -1,8 +1,12 @@
 package com.boot.laptop.request;
 
-import lombok.Data;
+import lombok.*;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
 public class LaptopRequest {
     private int laptop_id;
     private String laptop_name;
