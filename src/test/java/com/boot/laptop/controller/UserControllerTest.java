@@ -14,9 +14,9 @@ import static org.mockito.Mockito.*;
 
 public class UserControllerTest {
 
-    private UserService userService = mock(UserService.class);
-    private UserMapper userMapper = mock(UserMapper.class);
-    private UserController userController = new UserController(userService, userMapper);
+    private final UserService userService = mock(UserService.class);
+    private final UserMapper userMapper = mock(UserMapper.class);
+    private final UserController userController = new UserController(userService, userMapper);
 
     @Test
     public void testAddUser() {
