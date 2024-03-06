@@ -1,0 +1,215 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=windows-1252"> 
+  <title>Coverage Report > LaptopController</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.boot.laptop.controller</a>
+</div>
+
+<h1>Coverage Summary for Class: LaptopController (com.boot.laptop.controller)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">LaptopController</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/4)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/28)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.boot.laptop.controller;
+&nbsp;
+&nbsp;import com.boot.laptop.constant.URLConstant;
+&nbsp;import com.boot.laptop.mapper.LaptopMapper;
+&nbsp;import com.boot.laptop.model.Laptop;
+&nbsp;import com.boot.laptop.request.LaptopRequest;
+&nbsp;import com.boot.laptop.response.LaptopResponse;
+&nbsp;import com.boot.laptop.service.LaptopService;
+&nbsp;import io.swagger.v3.oas.annotations.Operation;
+&nbsp;import io.swagger.v3.oas.annotations.responses.ApiResponse;
+&nbsp;import io.swagger.v3.oas.annotations.responses.ApiResponses;
+&nbsp;import org.slf4j.Logger;
+&nbsp;import org.slf4j.LoggerFactory;
+&nbsp;import org.springframework.beans.factory.annotation.Autowired;
+&nbsp;import org.springframework.http.HttpStatus;
+&nbsp;import org.springframework.http.ResponseEntity;
+&nbsp;import org.springframework.web.bind.annotation.*;
+&nbsp;
+&nbsp;import java.util.List;
+&nbsp;import java.util.Optional;
+&nbsp;
+&nbsp;@RestController
+&nbsp;@RequestMapping(URLConstant.LAPTOP_STORE)
+&nbsp;public class LaptopController {
+&nbsp;
+<b class="nc">&nbsp;    Logger LOGGER = LoggerFactory.getLogger(LaptopController.class);</b>
+&nbsp;    private final LaptopService laptopService;
+&nbsp;
+&nbsp;    private final LaptopMapper laptopMapper;
+&nbsp;
+&nbsp;    @Autowired
+<b class="nc">&nbsp;    public LaptopController(LaptopService laptopService, LaptopMapper laptopMapper) {</b>
+<b class="nc">&nbsp;        this.laptopService = laptopService;</b>
+<b class="nc">&nbsp;        this.laptopMapper = laptopMapper;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Add Laptop into the database
+&nbsp;     *
+&nbsp;     * @param laptopRequest the request body containing the details of the laptop to be added
+&nbsp;     * @return the response entity containing the inserted laptop
+&nbsp;     */
+&nbsp;    @PostMapping(URLConstant.ADD_LAPTOP_INTO_STORE)
+&nbsp;    @Operation(
+&nbsp;            summary = &quot;Add Laptop into the database&quot;,
+&nbsp;            description = &quot;addLaptop method will add into the database and return inserted Laptop&quot;,
+&nbsp;            method = &quot;POST&quot;
+&nbsp;    )
+&nbsp;    @ApiResponses(value = {
+&nbsp;            @ApiResponse(responseCode = &quot;200&quot;, description = &quot;Successful operation&quot;),
+&nbsp;            @ApiResponse(responseCode = &quot;404&quot;, description = &quot;Resource not found&quot;),
+&nbsp;            @ApiResponse(responseCode = &quot;500&quot;, description = &quot;Internal Server Error&quot;)
+&nbsp;    })
+&nbsp;    public ResponseEntity&lt;LaptopResponse&gt; addLaptop(@RequestBody LaptopRequest laptopRequest) {
+&nbsp;        // Mapping laptop request to Laptop
+<b class="nc">&nbsp;        LOGGER.debug(&quot;Mapping laptop request to Laptop&quot;);</b>
+<b class="nc">&nbsp;        Laptop request = laptopMapper.mapLaptopRequestToLaptop(laptopRequest);</b>
+&nbsp;
+&nbsp;        // Adding laptop to database
+<b class="nc">&nbsp;        LOGGER.debug(&quot;Adding laptop to database&quot;);</b>
+<b class="nc">&nbsp;        laptopService.addLaptop(request);</b>
+&nbsp;
+&nbsp;        // Mapping laptop to laptop response
+<b class="nc">&nbsp;        LOGGER.debug(&quot;Mapping laptop to laptop response&quot;);</b>
+<b class="nc">&nbsp;        LaptopResponse response = laptopMapper.mapLaptopToLaptopResponse(request);</b>
+&nbsp;
+&nbsp;        // Returning response with status OK
+<b class="nc">&nbsp;        LOGGER.debug(&quot;Returning response with status OK&quot;);</b>
+<b class="nc">&nbsp;        return ResponseEntity.status(HttpStatus.OK).body(response);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    @GetMapping(URLConstant.LAPTOP_COLLECTION)
+&nbsp;    @Operation(summary = &quot;Get all the laptops from the database&quot;,
+&nbsp;            description = &quot;getAllLaptop method will return all the laptops as list&quot;,
+&nbsp;            method = &quot;GET&quot;)
+&nbsp;    @ApiResponses(value = {
+&nbsp;            @ApiResponse(responseCode = &quot;200&quot;, description = &quot;Successful operation&quot;),
+&nbsp;            @ApiResponse(responseCode = &quot;404&quot;, description = &quot;Resource not found&quot;),
+&nbsp;            @ApiResponse(responseCode = &quot;500&quot;, description = &quot;Internal Server Error&quot;)
+&nbsp;    })
+&nbsp;    public ResponseEntity&lt;List&lt;LaptopResponse&gt;&gt; getAllLaptop() {
+<b class="nc">&nbsp;        long laptopCount = 0;</b>
+<b class="nc">&nbsp;        LOGGER.debug(&quot;Fetching all laptops from the database&quot;);</b>
+<b class="nc">&nbsp;        List&lt;Laptop&gt; laptopList = laptopService.getAllLaptop();</b>
+<b class="nc">&nbsp;        laptopCount = laptopList.stream().count();</b>
+<b class="nc">&nbsp;        LOGGER.debug(&quot;Mapping laptop list to response list&quot;);</b>
+<b class="nc">&nbsp;        List&lt;LaptopResponse&gt; responseList = laptopMapper.mapLaptopListToLaptopResponseList(laptopList);</b>
+<b class="nc">&nbsp;        LOGGER.debug(&quot;Returning laptop response list&quot;);</b>
+<b class="nc">&nbsp;        LOGGER.info(&quot;Laptop count is {}&quot;, laptopCount);</b>
+<b class="nc">&nbsp;        return ResponseEntity.status(HttpStatus.OK).body(responseList);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @GetMapping(URLConstant.LAPTOP_BY_LAPTOP_ID)
+&nbsp;    @Operation(summary = &quot;Fetch Laptop By LaptopId&quot;, description = &quot;getAllLaptop method will return all the laptops as list&quot;, method = &quot;GET&quot;)
+&nbsp;    @ApiResponses(value = {
+&nbsp;            @ApiResponse(responseCode = &quot;200&quot;, description = &quot;Successful operation&quot;),
+&nbsp;            @ApiResponse(responseCode = &quot;404&quot;, description = &quot;Resource not found&quot;),
+&nbsp;            @ApiResponse(responseCode = &quot;500&quot;, description = &quot;Internal Server Error&quot;)
+&nbsp;    })
+&nbsp;    public ResponseEntity&lt;LaptopResponse&gt; getLaptopById(@PathVariable(&quot;laptop_id&quot;) int laptop_id) {
+<b class="nc">&nbsp;        LOGGER.debug(&quot;Fetching laptop by ID: {}&quot;, laptop_id);</b>
+<b class="nc">&nbsp;        Optional&lt;Laptop&gt; laptop = laptopService.getLaptopById(laptop_id);</b>
+<b class="nc">&nbsp;        LOGGER.debug(&quot;Mapping laptop to response by ID: {}&quot;, laptop_id);</b>
+<b class="nc">&nbsp;        LaptopResponse response = laptopMapper.mapLaptopToLaptopResponseByLaptopID(laptop_id);</b>
+<b class="nc">&nbsp;        LOGGER.debug(&quot;Returning response for laptop by ID: {}&quot;, laptop_id);</b>
+<b class="nc">&nbsp;        LOGGER.debug(&quot;Returning response for laptop by ID: {}&quot;, laptop);</b>
+<b class="nc">&nbsp;        return ResponseEntity.status(HttpStatus.OK).body(response);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-03-05 18:50</div>
+</div>
+</body>
+</html>
