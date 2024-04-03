@@ -4,12 +4,15 @@ import com.boot.laptop.model.Laptop;
 import com.boot.laptop.model.User;
 import com.boot.laptop.repository.LaptopRepository;
 import com.boot.laptop.request.UserRequest;
+import com.boot.laptop.response.LaptopResponse;
 import com.boot.laptop.response.UserResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Component
@@ -70,4 +73,18 @@ public class UserMapper {
 
         return userResponse;
     }
+
+    public List<UserResponse> mapUserListToUserResponseList(List<User> users) {
+        List<UserResponse> userResponseList = new ArrayList<>();
+        for (User user : users) {
+            UserResponse userResponse = new UserResponse();
+            userResponse.setUser_name(user.getUser_name());
+            userResponse.setUser_email(user.getUser_email());
+            userResponse.setUser_id(user.getUser_id());
+            userResponseList.add(userResponse);
+        }
+        return userResponseList;
+    }
 }
+
+

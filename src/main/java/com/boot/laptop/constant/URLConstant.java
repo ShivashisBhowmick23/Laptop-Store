@@ -10,5 +10,7 @@ public class URLConstant {
     public static final String ADD_USER = "/add-user";
     public static final String USER = "/user";
 
+    public static final String GET_ALL_USERS = "/user-collection";
+
 
 }
