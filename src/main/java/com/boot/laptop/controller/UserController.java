@@ -12,23 +12,15 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.*;
 
-
-import java.util.Collections;
 import java.util.List;
 
 @RestController
 @RequestMapping(URLConstant.USER)
 public class UserController {
-
     Logger log = LoggerFactory.getLogger(LaptopController.class);
 
     private final UserService userService;
@@ -62,7 +54,7 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null); // Or any other error response
         }
 
-        long userCount = 0;
+        long userCount;
         log.debug("Fetching all users from the database");
         List<User> userList = userService.retrieveAllUser();
         userCount = userList.size();

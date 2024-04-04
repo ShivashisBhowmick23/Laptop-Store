@@ -4,7 +4,6 @@ import com.boot.laptop.model.Laptop;
 import com.boot.laptop.model.User;
 import com.boot.laptop.repository.LaptopRepository;
 import com.boot.laptop.request.UserRequest;
-import com.boot.laptop.response.LaptopResponse;
 import com.boot.laptop.response.UserResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
