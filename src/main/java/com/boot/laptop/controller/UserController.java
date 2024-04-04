@@ -12,13 +12,17 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RequestHeader;
 
+
+import java.util.Collections;
 import java.util.List;
 
 @RestController
@@ -51,18 +55,23 @@ public class UserController {
     }
 
     @GetMapping(URLConstant.GET_ALL_USERS)
-    @Operation(summary = "Get all Users", description = " getAllUserList is a method where it will retrieve all the users from the database", method = "GET")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Successful operation"), @ApiResponse(responseCode = "404", description = "Resource not found"), @ApiResponse(responseCode = "500", description = "Internal Server Error")})
-    public ResponseEntity<List<UserResponse>> getAllUserList() {
+    public ResponseEntity<List<UserResponse>> getAllUserList(@RequestHeader("Custom-Header") String customHeader) {
+        // Check if the Custom-Header is present
+        if (customHeader == null || customHeader.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null); // Or any other error response
+        }
+
         long userCount = 0;
         log.debug("Fetching all users from the database");
         List<User> userList = userService.retrieveAllUser();
         userCount = userList.size();
-        log.debug("Mapping User list to user response list");
+        log.debug("Mapping User list to response list");
         List<UserResponse> responseList = userMapper.mapUserListToUserResponseList(userList);
         log.debug("Returning User response list");
         log.info("User count is {}", userCount);
         return ResponseEntity.status(HttpStatus.OK).body(responseList);
-
     }
+
+
 }

@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Component
 public class UserMapper {
@@ -77,12 +78,21 @@ public class UserMapper {
     public List<UserResponse> mapUserListToUserResponseList(List<User> users) {
         List<UserResponse> userResponseList = new ArrayList<>();
         for (User user : users) {
-            UserResponse userResponse = new UserResponse();
-            userResponse.setUser_name(user.getUser_name());
-            userResponse.setUser_email(user.getUser_email());
-            userResponse.setUser_id(user.getUser_id());
-            userResponseList.add(userResponse);
+            Set<Laptop> laptops = user.getLaptops();
+            if (laptops != null) {
+                for (Laptop laptop : laptops) {
+                    UserResponse userResponse = new UserResponse();
+                    userResponse.setUser_name(user.getUser_name());
+                    userResponse.setUser_email(user.getUser_email());
+                    userResponse.setUser_id(user.getUser_id());
+                    userResponse.setLaptop_id(laptop.getLaptop_id());
+                    userResponse.setLaptop_name(laptop.getLaptop_name());
+                    userResponse.setLaptop_price(laptop.getLaptop_price());
+                    userResponseList.add(userResponse);
+                }
+            }
         }
+        System.out.println("*********************" + userResponseList);
         return userResponseList;
     }
 }

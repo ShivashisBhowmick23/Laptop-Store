@@ -42,7 +42,6 @@ dependencies {
     //Swagger OPEN API Dependency
     implementation group: 'org.springdoc', name: 'springdoc-openapi-starter-webmvc-ui', version: '2.3.0'
 
-
 }
 
 tasks.named('test') {

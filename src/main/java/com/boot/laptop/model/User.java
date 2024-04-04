@@ -17,13 +17,10 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @NotEmpty
     @Column(name = "user_id")
     private int user_id;
-    @NotEmpty
     @Column(name = "user_name")
     private String user_name;
-    @NotEmpty
     @Column(name = "user_email")
     private String user_email;
 
