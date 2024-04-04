@@ -12,5 +12,7 @@ public class URLConstant {
 
     public static final String GET_ALL_USERS = "/user-collection";
 
+    public static final String USER_BY_USER_ID = GET_ALL_USERS + "/{user_id}";
+
 
 }

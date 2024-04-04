@@ -34,7 +34,7 @@ dependencies {
     //Lombok Dependency
     compileOnly 'org.projectlombok:lombok'
     //Postgresql Dependency
-    runtimeOnly 'org.postgresql:postgresql'
+    implementation 'org.postgresql:postgresql:42.2.24'
     //Lombok Annotation Dependency
     annotationProcessor 'org.projectlombok:lombok'
     //Spring Starter Test Dependency

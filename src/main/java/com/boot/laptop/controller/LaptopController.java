@@ -90,6 +90,12 @@ public class LaptopController {
         return ResponseEntity.status(HttpStatus.OK).body(responseList);
     }
 
+    /**
+     * Fetch Laptop By LaptopId method will return all the laptops as list
+     *
+     * @param  laptop_id	description of parameter
+     * @return         	description of return value
+     */
     @GetMapping(URLConstant.LAPTOP_BY_LAPTOP_ID)
     @Operation(summary = "Fetch Laptop By LaptopId", description = "getAllLaptop method will return all the laptops as list", method = "GET")
     @ApiResponses(value = {

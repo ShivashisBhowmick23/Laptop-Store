@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 @RestController
 @RequestMapping(URLConstant.USER)
@@ -64,4 +65,24 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null); // Or any other error response
 
     }
+    @GetMapping(URLConstant.USER_BY_USER_ID)
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Successful operation"), @ApiResponse(responseCode = "404", description = "Resource not found"), @ApiResponse(responseCode = "500", description = "Internal Server Error"), @ApiResponse(responseCode = "401", description = "AUTHENTICATION ERROR")})
+    public ResponseEntity<UserResponse> getUserByUserId(@RequestHeader("Custom-Header") String customHeader, @PathVariable("user_id") int user_id) {
+        if (Objects.equals(customHeader, "my-header")) {
+            log.debug("Fetching user from the database");
+            Optional<User> userOptional = userService.getUserById(user_id);
+            if (userOptional.isPresent()) {
+                log.debug("Mapping User to User Response");
+                UserResponse response = userMapper.mapUserToUserResponse(userOptional.get());
+                log.debug("Returning User response");
+                return ResponseEntity.status(HttpStatus.OK).body(response);
+            } else {
+                // Handle case where user is not found
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+            }
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null); // Or any other error response
+        }
+    }
+
 }
