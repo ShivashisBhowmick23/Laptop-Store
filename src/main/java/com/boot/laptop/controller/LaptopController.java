@@ -23,10 +23,9 @@ import java.util.Optional;
 @RequestMapping(URLConstant.LAPTOP_STORE)
 public class LaptopController {
 
-    Logger LOGGER = LoggerFactory.getLogger(LaptopController.class);
     private final LaptopService laptopService;
-
     private final LaptopMapper laptopMapper;
+    Logger LOGGER = LoggerFactory.getLogger(LaptopController.class);
 
     @Autowired
     public LaptopController(LaptopService laptopService, LaptopMapper laptopMapper) {

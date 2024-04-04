@@ -4,8 +4,8 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -27,7 +27,7 @@ public class Laptop {
     private String laptop_price;
 
     @ManyToMany(mappedBy = "laptops", cascade = CascadeType.MERGE)
-    private Set<User> userSet = new HashSet<>() {
+    private List<User> userSet = new ArrayList<>() {
     };
 
 }

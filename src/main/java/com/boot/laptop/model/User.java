@@ -3,8 +3,8 @@ package com.boot.laptop.model;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -30,7 +30,7 @@ public class User {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "laptop_id")
     )
-    private Set<Laptop> laptops = new HashSet<>();
+    private List<Laptop> laptops = new ArrayList<>();
 
 
 }

@@ -17,14 +17,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Objects;
 
 @RestController
 @RequestMapping(URLConstant.USER)
 public class UserController {
-    Logger log = LoggerFactory.getLogger(LaptopController.class);
-
     private final UserService userService;
     private final UserMapper userMapper;
+    Logger log = LoggerFactory.getLogger(LaptopController.class);
 
     @Autowired
     public UserController(UserService userService, UserMapper userMapper) {
@@ -47,23 +47,21 @@ public class UserController {
     }
 
     @GetMapping(URLConstant.GET_ALL_USERS)
-    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Successful operation"), @ApiResponse(responseCode = "404", description = "Resource not found"), @ApiResponse(responseCode = "500", description = "Internal Server Error")})
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Successful operation"), @ApiResponse(responseCode = "404", description = "Resource not found"), @ApiResponse(responseCode = "500", description = "Internal Server Error"), @ApiResponse(responseCode = "401", description = "AUTHENTICATION ERROR")})
     public ResponseEntity<List<UserResponse>> getAllUserList(@RequestHeader("Custom-Header") String customHeader) {
         // Check if the Custom-Header is present
-        if (customHeader == null || customHeader.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null); // Or any other error response
-        }
+        if (Objects.equals(customHeader, "my-header")) {
+            long userCount;
+            log.debug("Fetching all users from the database");
+            List<User> userList = userService.retrieveAllUser();
+            userCount = userList.size();
+            log.debug("Mapping User list to response list");
+            List<UserResponse> responseList = userMapper.mapUserListToUserResponseList(userList);
+            log.debug("Returning User response list");
+            log.info("User count is {}", userCount);
+            return ResponseEntity.status(HttpStatus.OK).body(responseList);
+        } else
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null); // Or any other error response
 
-        long userCount;
-        log.debug("Fetching all users from the database");
-        List<User> userList = userService.retrieveAllUser();
-        userCount = userList.size();
-        log.debug("Mapping User list to response list");
-        List<UserResponse> responseList = userMapper.mapUserListToUserResponseList(userList);
-        log.debug("Returning User response list");
-        log.info("User count is {}", userCount);
-        return ResponseEntity.status(HttpStatus.OK).body(responseList);
     }
-
-
 }
