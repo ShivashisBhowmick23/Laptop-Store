@@ -65,6 +65,7 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null); // Or any other error response
 
     }
+
     @GetMapping(URLConstant.USER_BY_USER_ID)
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Successful operation"), @ApiResponse(responseCode = "404", description = "Resource not found"), @ApiResponse(responseCode = "500", description = "Internal Server Error"), @ApiResponse(responseCode = "401", description = "AUTHENTICATION ERROR")})
     public ResponseEntity<UserResponse> getUserByUserId(@RequestHeader("Custom-Header") String customHeader, @PathVariable("user_id") int user_id) {
