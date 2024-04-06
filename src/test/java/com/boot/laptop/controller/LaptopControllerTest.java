@@ -14,8 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class LaptopControllerTest {
@@ -44,13 +43,22 @@ public class LaptopControllerTest {
         laptop.setLaptop_name("Dell");
         laptop.setLaptop_price("1000.0");
 
+        // Mock the behavior of laptopMapper
         when(laptopMapper.mapLaptopRequestToLaptop(any(LaptopRequest.class))).thenReturn(laptop);
+
+        // Mock the behavior of laptopUtil
         when(laptopUtil.isLaptopExists(any(Laptop.class))).thenReturn(false);
 
+        // Mock the behavior of laptopService.addLaptop() method
+        doNothing().when(laptopService).addLaptop(any(Laptop.class));
+
+        // Perform the test
         ResponseEntity<String> response = laptopController.addLaptop(laptopRequest);
 
+        // Assert the response
         assertEquals(HttpStatus.OK, response.getStatusCode());
     }
+
 
     @Test
     public void testAddLaptop_LaptopAlreadyExistException() {
