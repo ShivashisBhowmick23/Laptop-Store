@@ -3,6 +3,7 @@ package com.boot.laptop.controller;
 
 import com.boot.laptop.constant.URLConstant;
 import com.boot.laptop.exception.LaptopAlreadyExistException;
+import com.boot.laptop.exception.LaptopNotFoundException;
 import com.boot.laptop.mapper.LaptopMapper;
 import com.boot.laptop.model.Laptop;
 import com.boot.laptop.request.LaptopRequest;
@@ -47,11 +48,7 @@ public class LaptopController {
      */
     @PostMapping(URLConstant.ADD_LAPTOP_INTO_STORE)
     @Operation(summary = "Add Laptop into the database", description = "addLaptop method will add into the database and return inserted Laptop", method = "POST")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Successful operation"),
-            @ApiResponse(responseCode = "404", description = "Resource not found"),
-            @ApiResponse(responseCode = "500", description = "Internal Server Error")
-    })
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Successful operation"), @ApiResponse(responseCode = "404", description = "Resource not found"), @ApiResponse(responseCode = "500", description = "Internal Server Error")})
     public ResponseEntity<String> addLaptop(@RequestBody LaptopRequest laptopRequest) {
         try {
             // Mapping laptop request to Laptop
@@ -106,13 +103,38 @@ public class LaptopController {
     @Operation(summary = "Fetch Laptop By LaptopId", description = "getAllLaptop method will return all the laptops as list", method = "GET")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Successful operation"), @ApiResponse(responseCode = "404", description = "Resource not found"), @ApiResponse(responseCode = "500", description = "Internal Server Error")})
     public ResponseEntity<LaptopResponse> getLaptopById(@PathVariable("laptop_id") int laptop_id) {
-        LOGGER.debug("Fetching laptop by ID: {}", laptop_id);
-        Optional<Laptop> laptop = laptopService.getLaptopById(laptop_id);
-        LOGGER.debug("Mapping laptop to response by ID: {}", laptop_id);
-        LaptopResponse response = laptopMapper.mapLaptopToLaptopResponseByLaptopID(laptop_id);
-        LOGGER.debug("Returning response for laptop by ID: {}", laptop_id);
-        LOGGER.debug("Returning response for laptop by ID: {}", laptop);
-        return ResponseEntity.status(HttpStatus.OK).body(response);
+        try {
+            LOGGER.debug("Fetching laptop by ID: {}", laptop_id);
+
+            // Check if the laptop ID exists
+            if (!laptopUtil.isLaptopIdExists(laptop_id)) {
+                throw new LaptopNotFoundException("Laptop not found with ID: " + laptop_id);
+            }
+
+            // Fetch the laptop from the service
+            Optional<Laptop> laptop = laptopService.getLaptopById(laptop_id);
+
+            // Check if the laptop is present
+            if (laptop.isEmpty()) {
+                throw new LaptopNotFoundException("Laptop not found with ID: " + laptop_id);
+            }
+
+            // Map the laptop to response
+            LOGGER.debug("Mapping laptop to response by ID: {}", laptop_id);
+            LaptopResponse response = laptopMapper.mapLaptopToLaptopResponseByLaptopID(laptop_id);
+
+            LOGGER.debug("Returning response for laptop by ID: {}", laptop_id);
+            LOGGER.debug("Returning response for laptop by ID: {}", laptop);
+
+            // Return the response with status OK
+            return ResponseEntity.status(HttpStatus.OK).body(response);
+        } catch (LaptopNotFoundException laptopNotFoundException) {
+            // If laptop not found, set error message and return with status NOT_FOUND
+            LaptopResponse laptopResponse = new LaptopResponse();
+            laptopResponse.setErrorMsg("No Laptop found with the laptop id: " + laptop_id);
+            LOGGER.debug("Error: Laptop not found", laptopNotFoundException);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(laptopResponse);
+        }
     }
 
 }

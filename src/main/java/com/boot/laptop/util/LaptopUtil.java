@@ -20,4 +20,11 @@ public class LaptopUtil {
         // Return true if the laptop already exists, false otherwise
         return existingLaptop.isPresent();
     }
+
+    public boolean isLaptopIdExists(int laptop_id) {
+        // Check if a laptop with the same name already exists in the database
+        Optional<Laptop> existingLaptop = laptopRepository.findById(laptop_id);
+        // Return true if the laptop already exists, false otherwise
+        return existingLaptop.isPresent();
+    }
 }
