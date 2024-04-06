@@ -3,6 +3,7 @@ package com.boot.laptop.controller;
 import com.boot.laptop.mapper.LaptopMapper;
 import com.boot.laptop.model.Laptop;
 import com.boot.laptop.request.LaptopRequest;
+import com.boot.laptop.service.LaptopService;
 import com.boot.laptop.util.LaptopUtil;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -24,6 +25,9 @@ public class LaptopControllerTest {
 
     @Mock
     private LaptopMapper laptopMapper;
+
+    @Mock
+    private LaptopService laptopService;
 
     @Mock
     private LaptopUtil laptopUtil;
