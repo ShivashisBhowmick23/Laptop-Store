@@ -15,5 +15,7 @@ public interface LaptopService {
 
     Optional<Laptop> getLaptopById(int laptop_id);
 
+    void deleteLaptopByLaptopID(int laptop_id);
 
+    List<Laptop> findLaptopByIdWithUsers(int laptopId);
 }

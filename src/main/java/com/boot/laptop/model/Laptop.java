@@ -12,6 +12,7 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 @Setter
+@ToString
 @Entity(name = "laptop_tbl")
 public class Laptop {
     @Id

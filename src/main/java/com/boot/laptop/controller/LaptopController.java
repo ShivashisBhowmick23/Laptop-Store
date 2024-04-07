@@ -28,9 +28,11 @@ import java.util.Optional;
 @RequestMapping(URLConstant.LAPTOP_STORE)
 public class LaptopController {
 
+
     private final LaptopService laptopService;
     private final LaptopMapper laptopMapper;
     private final LaptopUtil laptopUtil;
+
     Logger LOGGER = LoggerFactory.getLogger(LaptopController.class);
 
     @Autowired
@@ -129,12 +131,56 @@ public class LaptopController {
             // Return the response with status OK
             return ResponseEntity.status(HttpStatus.OK).body(response);
         } catch (LaptopNotFoundException laptopNotFoundException) {
-            // If laptop not found, set error message and return with status NOT_FOUND
+            // If laptop not found, set error message and return with status BAD_REQUEST
             LaptopResponse laptopResponse = new LaptopResponse();
             laptopResponse.setErrorMsg("No Laptop found with the laptop id: " + laptop_id);
             LOGGER.debug("Error: Laptop not found", laptopNotFoundException);
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(laptopResponse);
         }
     }
+
+
+    @DeleteMapping(URLConstant.LAPTOP_BY_LAPTOP_ID)
+    @Operation(summary = "Fetch Laptop By LaptopId", description = "getAllLaptop method will return all the laptops as list", method = "DELETE")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successful operation"),
+            @ApiResponse(responseCode = "404", description = "Resource not found"),
+            @ApiResponse(responseCode = "500", description = "Internal Server Error")
+    })
+    ResponseEntity<String> deleteByLaptopID(int laptop_id) {
+        try {
+            LOGGER.info("Attempting to delete laptop with ID: {}", laptop_id);
+
+            // Check if the laptop exists
+            List<Laptop> laptopList = laptopService.findLaptopByIdWithUsers(laptop_id);
+            if (laptopList.isEmpty()) {
+                LOGGER.warn("No Laptop found with requested laptop id: {}", laptop_id);
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No Laptop found with requested laptop id: " + laptop_id);
+            }
+
+            // Check if any laptop in the list is referenced in the user_laptop table
+            for (Laptop laptop : laptopList) {
+                if (!laptop.getUserSet().isEmpty()) {
+                    LOGGER.warn("Cannot delete laptop with id: {} as it is referenced in user_laptop table", laptop_id);
+                    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Cannot delete laptop with id: " + laptop_id + " as it is referenced in user_laptop table");
+                }
+            }
+
+            // If no laptop in the list is referenced, delete the laptops
+            for (Laptop laptop : laptopList) {
+                laptopService.deleteLaptopByLaptopID(laptop.getLaptop_id());
+
+                // Log the details of the deleted laptop
+                LOGGER.info("Laptop deleted successfully with laptop ID: {}", laptop.getLaptop_id());
+            }
+
+            // Return a success response
+            return ResponseEntity.status(HttpStatus.OK).body("Laptop(s) deleted successfully with laptop ID: " + laptop_id);
+        } catch (Exception e) {
+            LOGGER.error("An error occurred while deleting laptop(s) with ID: {}", laptop_id, e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred: " + e.getMessage());
+        }
+    }
+
 
 }

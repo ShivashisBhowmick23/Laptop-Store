@@ -18,5 +18,5 @@ spring:
     level:
       com:
         boot:
-          laptop: DEBUG
+          laptop: debug
 
