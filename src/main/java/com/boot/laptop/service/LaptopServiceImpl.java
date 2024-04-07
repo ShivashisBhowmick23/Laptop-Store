@@ -31,4 +31,14 @@ public class LaptopServiceImpl implements LaptopService {
     public Optional<Laptop> getLaptopById(int laptop_id) {
         return laptopRepository.findById(laptop_id);
     }
+
+    @Override
+    public void deleteLaptopByLaptopID(int laptop_id) {
+        laptopRepository.deleteById(laptop_id);
+    }
+
+    @Override
+    public List<Laptop> findLaptopByIdWithUsers(int laptop_id) {
+        return laptopRepository.findDistinctByLaptopId(laptop_id);
+    }
 }
