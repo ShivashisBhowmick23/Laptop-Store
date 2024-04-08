@@ -19,5 +19,7 @@ public interface LaptopService {
 
     List<Laptop> findLaptopByIdWithUsers(int laptopId);
 
+    List<Laptop> getLaptopsByLaptopName(String laptopName);
+
 
 }

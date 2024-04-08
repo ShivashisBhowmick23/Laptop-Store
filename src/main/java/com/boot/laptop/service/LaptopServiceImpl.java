@@ -41,4 +41,9 @@ public class LaptopServiceImpl implements LaptopService {
     public List<Laptop> findLaptopByIdWithUsers(int laptop_id) {
         return laptopRepository.findDistinctByLaptopId(laptop_id);
     }
+
+    @Override
+    public List<Laptop> getLaptopsByLaptopName(String laptopName) {
+        return laptopRepository.findByLaptopName(laptopName);
+    }
 }

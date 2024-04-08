@@ -14,5 +14,7 @@ public class URLConstant {
 
     public static final String USER_BY_USER_ID = GET_ALL_USERS + "/{user_id}";
 
+    public static final String LAPTOP_BY_LAPTOP_NAME = LAPTOP_COLLECTION + "/by-name" + "/{laptop-name}";
+
 
 }
