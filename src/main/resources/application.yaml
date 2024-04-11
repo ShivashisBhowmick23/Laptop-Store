@@ -14,9 +14,8 @@ spring:
   application:
     name: laptop_store_application
 
-  logging:
-    level:
-      com:
-        boot:
-          laptop: DEBUG
+logging:
+  level:
+    root: INFO
+
 

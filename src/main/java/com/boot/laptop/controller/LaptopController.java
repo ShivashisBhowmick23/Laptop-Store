@@ -13,6 +13,8 @@ import com.boot.laptop.util.LaptopUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +24,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 
@@ -32,7 +35,8 @@ public class LaptopController {
     private final LaptopService laptopService;
     private final LaptopMapper laptopMapper;
     private final LaptopUtil laptopUtil;
-    Logger LOGGER = LoggerFactory.getLogger(LaptopController.class);
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(LaptopController.class);
 
     @Autowired
     public LaptopController(LaptopService laptopService, LaptopMapper laptopMapper, LaptopUtil laptopUtil) {
@@ -184,25 +188,31 @@ public class LaptopController {
     @GetMapping(URLConstant.LAPTOP_BY_LAPTOP_NAME)
     @Operation(summary = "Fetch Laptop By LaptopId", description = "getAllLaptop method will return all the laptops as list", method = "GET")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Successful operation"), @ApiResponse(responseCode = "404", description = "Resource not found"), @ApiResponse(responseCode = "500", description = "Internal Server Error")})
-    ResponseEntity<List<LaptopResponse>> getByLaptopName(@RequestParam("laptop_name") String laptop_name) {
+    ResponseEntity<List<LaptopResponse>> getByLaptopName(@RequestHeader (name = "request-header" ) String customHeader,@RequestParam("laptop_name") String laptop_name,HttpServletResponse response) {
         try {
-            List<Laptop> laptops = laptopService.getLaptopsByLaptopName(laptop_name);
-            if (laptops.isEmpty()) {
-                throw new LaptopNotFoundException("Laptop not found with name: " + laptop_name);
+                List<Laptop> laptops = laptopService.getLaptopsByLaptopName(laptop_name.toUpperCase());
+
+                if (laptops.isEmpty()) {
+                    throw new LaptopNotFoundException("Laptop not found with name: " + laptop_name);
+                }
+
+                LOGGER.info("Mapping laptops to response by name: {}", laptop_name);
+                List<LaptopResponse> responses = laptopMapper.mapLaptopListToLaptopResponseList(laptops);
+
+                LOGGER.info("Returning response for laptops by name: {}", laptop_name);
+                LOGGER.info("Returning response for laptops by name: {}", laptops);
+            if (Objects.equals(customHeader, "request-header")) {
+                response.addCookie(new Cookie("status_code", "200"));
             }
 
-            LOGGER.debug("Mapping laptops to response by name: {}", laptop_name);
-            List<LaptopResponse> responses = laptopMapper.mapLaptopListToLaptopResponseList(laptops);
-
-            LOGGER.debug("Returning response for laptops by name: {}", laptop_name);
-            LOGGER.debug("Returning response for laptops by name: {}", laptops);
 
             return ResponseEntity.status(HttpStatus.OK).body(responses);
         } catch (LaptopNotFoundException laptopNotFoundException) {
             LaptopResponse laptopResponse = new LaptopResponse();
             laptopResponse.setErrorMsg("No Laptop found with the name: " + laptop_name);
-            LOGGER.debug("Not able to retrieve data");
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Collections.singletonList(laptopResponse));
+            LOGGER.info("Not able to retrieve data");
+            response.addCookie(new Cookie("status_code", "500"));
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Collections.singletonList(laptopResponse));
         }
     }
 
