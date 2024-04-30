@@ -10,5 +10,11 @@ public class URLConstant {
     public static final String ADD_USER = "/add-user";
     public static final String USER = "/user";
 
+    public static final String GET_ALL_USERS = "/user-collection";
+
+    public static final String USER_BY_USER_ID = GET_ALL_USERS + "/{user_id}";
+
+    public static final String LAPTOP_BY_LAPTOP_NAME = LAPTOP_COLLECTION + "/by-name" + "/{laptop-name}";
+
 
 }

@@ -34,14 +34,13 @@ dependencies {
     //Lombok Dependency
     compileOnly 'org.projectlombok:lombok'
     //Postgresql Dependency
-    runtimeOnly 'org.postgresql:postgresql'
+    implementation 'org.postgresql:postgresql:42.2.24'
     //Lombok Annotation Dependency
     annotationProcessor 'org.projectlombok:lombok'
     //Spring Starter Test Dependency
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     //Swagger OPEN API Dependency
     implementation group: 'org.springdoc', name: 'springdoc-openapi-starter-webmvc-ui', version: '2.3.0'
-
 
 }
 

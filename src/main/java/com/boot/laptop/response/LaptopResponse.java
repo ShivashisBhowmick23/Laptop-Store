@@ -11,4 +11,6 @@ public class LaptopResponse {
     private int laptop_id;
     private String laptop_name;
     private String laptop_price;
+
+    private String errorMsg;
 }

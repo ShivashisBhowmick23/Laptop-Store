@@ -14,18 +14,18 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 @RestController
 @RequestMapping(URLConstant.USER)
 public class UserController {
-
-    private static final Logger log = LoggerFactory.getLogger(UserController.class);
-
     private final UserService userService;
     private final UserMapper userMapper;
+    Logger log = LoggerFactory.getLogger(LaptopController.class);
 
     @Autowired
     public UserController(UserService userService, UserMapper userMapper) {
@@ -34,14 +34,8 @@ public class UserController {
     }
 
     @PostMapping(URLConstant.ADD_USER)
-    @Operation(summary = "Add user into the database",
-            description = " addUser method will add into the database and return inserted User",
-            method = "POST")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Successful operation"),
-            @ApiResponse(responseCode = "404", description = "Resource not found"),
-            @ApiResponse(responseCode = "500", description = "Internal Server Error")
-    })
+    @Operation(summary = "Add user into the database", description = " addUser method will add into the database and return inserted User", method = "POST")
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Successful operation"), @ApiResponse(responseCode = "404", description = "Resource not found"), @ApiResponse(responseCode = "500", description = "Internal Server Error")})
     public ResponseEntity<UserResponse> addUser(UserRequest userRequest) {
         log.debug("Mapping user request to user");
         User request = userMapper.mapUserRequestToUser(userRequest);
@@ -52,4 +46,44 @@ public class UserController {
         log.debug("Returning response with status OK");
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
+
+    @GetMapping(URLConstant.GET_ALL_USERS)
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Successful operation"), @ApiResponse(responseCode = "404", description = "Resource not found"), @ApiResponse(responseCode = "500", description = "Internal Server Error"), @ApiResponse(responseCode = "401", description = "AUTHENTICATION ERROR")})
+    public ResponseEntity<List<UserResponse>> getAllUserList(@RequestHeader("Custom-Header") String customHeader) {
+        // Check if the Custom-Header is present
+        if (Objects.equals(customHeader, "my-header")) {
+            long userCount;
+            log.debug("Fetching all users from the database");
+            List<User> userList = userService.retrieveAllUser();
+            userCount = userList.size();
+            log.debug("Mapping User list to response list");
+            List<UserResponse> responseList = userMapper.mapUserListToUserResponseList(userList);
+            log.debug("Returning User response list");
+            log.info("User count is {}", userCount);
+            return ResponseEntity.status(HttpStatus.OK).body(responseList);
+        } else
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null); // Or any other error response
+
+    }
+
+    @GetMapping(URLConstant.USER_BY_USER_ID)
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Successful operation"), @ApiResponse(responseCode = "404", description = "Resource not found"), @ApiResponse(responseCode = "500", description = "Internal Server Error"), @ApiResponse(responseCode = "401", description = "AUTHENTICATION ERROR")})
+    public ResponseEntity<UserResponse> getUserByUserId(@RequestHeader("Custom-Header") String customHeader, @PathVariable("user_id") int user_id) {
+        if (Objects.equals(customHeader, "my-header")) {
+            log.debug("Fetching user from the database");
+            Optional<User> userOptional = userService.getUserById(user_id);
+            if (userOptional.isPresent()) {
+                log.debug("Mapping User to User Response");
+                UserResponse response = userMapper.mapUserToUserResponse(userOptional.get());
+                log.debug("Returning User response");
+                return ResponseEntity.status(HttpStatus.OK).body(response);
+            } else {
+                // Handle case where user is not found
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+            }
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null); // Or any other error response
+        }
+    }
+
 }

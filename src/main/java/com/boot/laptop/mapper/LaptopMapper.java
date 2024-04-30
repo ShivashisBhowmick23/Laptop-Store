@@ -55,6 +55,29 @@ public class LaptopMapper {
         }
     }
 
+    public List<LaptopResponse> mapLaptopToLaptopResponseByLaptopName(String laptopName) {
+        List<LaptopResponse> laptopResponses = new ArrayList<>();
+
+        // Assuming you have a method to retrieve a Laptop object by its name
+        List<Laptop> laptops = laptopRepository.findByLaptopName(laptopName);
+
+        if (laptops == null) {
+            // Handle case where laptop with the given name is not found
+            return null; // Or throw an exception, depending on your requirements
+        }
+
+        // Map the properties of the Laptop object to the corresponding properties of LaptopResponse
+        for (Laptop laptop : laptops) {
+            LaptopResponse laptopResponse = new LaptopResponse();
+            laptopResponse.setLaptop_id(laptop.getLaptop_id());
+            laptopResponse.setLaptop_name(laptop.getLaptop_name());
+            laptopResponse.setLaptop_price(laptop.getLaptop_price());
+            laptopResponses.add(laptopResponse);
+        }
+        return laptopResponses;
+    }
+
+
     public Laptop mapLaptopRequestToLaptop(LaptopRequest laptopRequest) {
         Laptop laptop = new Laptop();
         laptop.setLaptop_id(laptopRequest.getLaptop_id());
